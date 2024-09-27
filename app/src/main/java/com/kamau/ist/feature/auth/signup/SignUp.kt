@@ -39,7 +39,7 @@ import com.kamau.ist.feature.auth.signin.SignInState
 
 @Composable
 fun SignUpScreen(navController: NavController){
-    val viewModel : SignInViewModel = hiltViewModel()
+    val viewModel : SignUpViewModel = hiltViewModel()
     val uiState = viewModel.state.collectAsState()
     var email by remember {
         mutableStateOf("")

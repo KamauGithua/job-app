@@ -1,7 +1,5 @@
 package com.kamau.ist.feature.auth.signin
 
-
-
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,10 +9,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor() : ViewModel() {
+
     private val _state = MutableStateFlow<SignInState>(SignInState.Nothing)
     val state = _state.asStateFlow()
 
-    fun signIn(email: String, password: String){
+    fun signIn(email: String, password: String) {
         _state.value = SignInState.Loading
         // Firebase signIn
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
@@ -30,12 +29,10 @@ class SignInViewModel @Inject constructor() : ViewModel() {
                     _state.value = SignInState.Error
                 }
             }
-
     }
-
-
 }
-sealed class SignInState{
+
+sealed class SignInState {
     object Nothing : SignInState()
     object Loading : SignInState()
     object Success : SignInState()
