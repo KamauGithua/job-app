@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "362048122351",
+    "project_id": "ist-app-4164f",
+    "storage_bucket": "ist-app-4164f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362048122351:android:d4abf0197b7bf5867c5a1a",
+        "android_client_info": {
+          "package_name": "com.kamau.ist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQwGmDkr78VKBGLgv2YX_IC6oS4K-DGzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
