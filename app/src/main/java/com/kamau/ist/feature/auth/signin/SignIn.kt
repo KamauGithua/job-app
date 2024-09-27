@@ -76,7 +76,7 @@ fun SignInScreen(navController: NavController){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(painter = painterResource(id = R.drawable.logo), contentDescription = null,
+            Image(painter = painterResource(id = R.drawable.ist), contentDescription = null,
                 modifier = Modifier
                     .size(200.dp)
                     .background(Color.White)
