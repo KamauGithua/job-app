@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -91,7 +92,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
+//    val nav_version = "2.8.1"
 
+    implementation("androidx.navigation:navigation-compose:2.8.1")
 //    implementation(libs.google.firebase.auth)
 //    implementation(libs.firebase.database)
 //    implementation(libs.firebase.storage)
