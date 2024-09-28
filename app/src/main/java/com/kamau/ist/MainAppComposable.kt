@@ -8,9 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.kamau.ist.feature.application.ApplicationFormScreen
 import com.kamau.ist.feature.auth.signin.SignInScreen
 import com.kamau.ist.feature.auth.signup.SignUpScreen
 import com.kamau.ist.feature.home.HomeScreen
+import com.kamau.ist.feature.job.JobDetailScreen
+import com.kamau.ist.feature.job.JobListScreen
 
 @Composable
 fun MainApp() {
@@ -28,6 +31,15 @@ fun MainApp() {
             }
             composable("home") {
                 HomeScreen(navController)
+            }
+            composable("job_list") { JobListScreen(navController) }
+            composable("job_detail/{jobId}") { backStackEntry ->
+                val jobId = backStackEntry.arguments?.getString("jobId")
+                JobDetailScreen(navController, jobId)
+            }
+            composable("application_form/{jobId}") { backStackEntry ->
+                val jobId = backStackEntry.arguments?.getString("jobId")
+                ApplicationFormScreen(navController, jobId)
             }
         }
     }

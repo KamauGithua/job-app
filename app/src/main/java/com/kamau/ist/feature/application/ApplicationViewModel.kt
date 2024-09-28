@@ -2,6 +2,7 @@ package com.kamau.ist.feature.application
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.kamau.ist.model.JobApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
