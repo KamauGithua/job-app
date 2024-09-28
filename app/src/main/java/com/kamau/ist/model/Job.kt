@@ -1,7 +1,7 @@
 package com.kamau.ist.model
 
 data class Job(
-    val id: String = "",
+    var id: String = "",
     val title: String = "",
     val description: String = "",
     val company: String = "",

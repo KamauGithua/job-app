@@ -97,7 +97,7 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
 
                 Button(
                     onClick = {
-                        viewModel.postJob(
+                        viewModel.addJob(
                             Job(
                             title = title,
                             description = description,

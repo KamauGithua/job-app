@@ -4,29 +4,66 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kamau.ist.model.Job
+import com.kamau.ist.model.JobApplication
+import com.kamau.ist.repository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class JobViewModel @Inject constructor(
-    private val firestore: FirebaseFirestore
+
+    private val repository: FirestoreRepository
+//    private val firestore: FirebaseFirestore
 ) : ViewModel() {
 
     var jobList by mutableStateOf(listOf<Job>())
+        private set
+
+    var applicationStatus by mutableStateOf<Result<Void?>>(Result.success(null))
         private set
 
     init {
         loadJobs()
     }
 
+    // Fetch all job listings from Firestore
     private fun loadJobs() {
-        firestore.collection("jobs").get()
-            .addOnSuccessListener { result ->
-                jobList = result.documents.map { document ->
-                    document.toObject(Job::class.java)!!.copy(id = document.id)
-                }
+        viewModelScope.launch {
+            val result = repository.getJobListings()
+            result.onSuccess { jobs ->
+                jobList = jobs
+            }.onFailure { exception ->
+                // Handle errors here
+                println("Error loading jobs: ${exception.message}")
             }
+        }
     }
+
+    // Function to add a new job posting (Admin use case)
+    fun addJob(job: Job) {
+        viewModelScope.launch {
+            repository.addJob(job)
+        }
+    }
+
+    // Function to submit a new job application
+    fun submitJobApplication(application: JobApplication) {
+        viewModelScope.launch {
+            val result = repository.submitJobApplication(application)
+            applicationStatus = result
+        }
+    }
+
+//    private fun loadJobs() {
+//        firestore.collection("jobs").get()
+//            .addOnSuccessListener { result ->
+//                jobList = result.documents.map { document ->
+//                    document.toObject(Job::class.java)!!.copy(id = document.id)
+//                }
+//            }
+//    }
 }
