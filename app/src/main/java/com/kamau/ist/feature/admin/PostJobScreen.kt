@@ -22,7 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.kamau.ist.feature.job.JobViewModel
+import com.kamau.ist.model.Job
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,13 +96,15 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
 
                 Button(
                     onClick = {
-                        viewModel.postJob(Job(
+                        viewModel.postJob(
+                            Job(
                             title = title,
                             description = description,
                             company = company,
                             requirements = requirements,
                             deadline = deadline
-                        ))
+                        )
+                        )
                         navController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth()

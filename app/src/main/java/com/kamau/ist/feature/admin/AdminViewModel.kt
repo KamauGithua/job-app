@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.kamau.ist.model.Job
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
