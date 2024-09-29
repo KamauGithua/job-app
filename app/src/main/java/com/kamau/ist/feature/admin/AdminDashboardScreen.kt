@@ -24,7 +24,7 @@ fun AdminDashboardScreen(navController: NavController,
             TopAppBar(title = { Text("Admin Dashboard") })
         },
         content = {
-            Column(modifier = Modifier.padding(it)) {
+            Column(modifier = Modifier.padding(it).padding(16.dp)) {
                 Text(text = "Welcome, Admin")
 
                 Spacer(modifier = Modifier.height(16.dp))

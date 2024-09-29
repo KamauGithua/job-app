@@ -37,7 +37,7 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
                 )
             },
             content = {
-                Column(modifier = Modifier.padding(it)) {
+                Column(modifier = Modifier.padding(it).padding(16.dp)) {
                     Text(text = job.description)
                     Text(text = "Company: ${job.company}")
                     Text(text = "Requirements: ${job.requirements}")

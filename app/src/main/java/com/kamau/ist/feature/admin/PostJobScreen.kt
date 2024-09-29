@@ -49,7 +49,7 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
             )
         },
         content = {
-            Column(modifier = Modifier.padding(it)) {
+            Column(modifier = Modifier.padding(it).padding(16.dp)) {
                 TextField(
                     value = title,
                     onValueChange = { title = it },

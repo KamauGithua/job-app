@@ -10,9 +10,26 @@ class FirestoreRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
+
+
     private val jobsCollection = firestore.collection("jobs")
     private val applicationsCollection = firestore.collection("applications")
 
+
+    fun getUserRole(userId: String, onComplete: (String?) -> Unit) {
+        firestore.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val role = document.getString("role")
+                    onComplete(role)
+                } else {
+                    onComplete(null)
+                }
+            }
+            .addOnFailureListener {
+                onComplete(null)
+            }
+    }
     // Function to add a new job posting
     suspend fun addJob(job: Job): Result<Void?> {
         return try {

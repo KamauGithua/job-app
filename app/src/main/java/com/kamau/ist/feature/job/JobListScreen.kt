@@ -29,7 +29,7 @@ fun JobListScreen(navController: NavController, viewModel: JobViewModel = hiltVi
         },
         content = {
             LazyColumn(modifier = Modifier.fillMaxSize()
-                .padding(it)) {
+                .padding(it).padding(16.dp)) {
                 items(viewModel.jobList) { job ->
                     JobItem(job = job, onClick = { navController.navigate("job_detail/${job.id}") })
                 }

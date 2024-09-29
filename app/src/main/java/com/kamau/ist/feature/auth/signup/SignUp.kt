@@ -41,6 +41,9 @@ import com.kamau.ist.feature.auth.signin.SignInState
 fun SignUpScreen(navController: NavController){
     val viewModel : SignUpViewModel = hiltViewModel()
     val uiState = viewModel.state.collectAsState()
+
+    val navigationEvent by viewModel.navigationEvent.collectAsState()
+
     var email by remember {
         mutableStateOf("")
     }
@@ -55,20 +58,44 @@ fun SignUpScreen(navController: NavController){
     }
 
     val context = LocalContext.current
+
+    LaunchedEffect(navigationEvent) {
+        navigationEvent?.let {
+            when (it) {
+                NavigationEvent.NavigateToAdminDashboard -> {
+                    navController.navigate("admin_dashboard")
+                }
+                NavigationEvent.NavigateToJobList -> {
+                    navController.navigate("job_list")
+                }
+                NavigationEvent.NavigateToSignIn -> {
+                    navController.navigate("signin")
+                }
+            }
+            viewModel.clearNavigationEvent()
+        }
+    }
+
     LaunchedEffect(key1 = uiState.value) {
 
         when (uiState.value) {
             is SignUpState.Success -> {
-                navController.navigate("home")
+                Toast.makeText(context, "Sign Up successful!", Toast.LENGTH_SHORT).show()
+                // Navigate to job screen or other screen based on the role
+//                viewModel.navigateToRoleBasedScreen("User")
             }
 
             is SignUpState.Error -> {
-                Toast.makeText(context, "Sign In failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Sign Up failed", Toast.LENGTH_SHORT).show()
             }
 
             else -> {}
         }
     }
+
+
+
+
     Scaffold(modifier = Modifier
         .fillMaxSize())
     {

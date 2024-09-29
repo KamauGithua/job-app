@@ -44,7 +44,7 @@ fun ApplicationFormScreen(navController: NavController, jobId: String?, viewMode
             )
         },
         content = {
-            Column(modifier = Modifier.padding(it)) {
+            Column(modifier = Modifier.padding(it).padding(16.dp)) {
                 TextField(
                     value = coverLetter,
                     onValueChange = { coverLetter = it },

@@ -37,29 +37,47 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kamau.ist.R
 import com.kamau.ist.feature.auth.signup.SignUpState
+import com.kamau.ist.feature.auth.signup.SignUpViewModel
 
 @Composable
 fun SignInScreen(navController: NavController){
     val viewModel: SignInViewModel = hiltViewModel()
-//    val viewModel: SignInViewModel = hiltViewModel()
     val uiState = viewModel.state.collectAsState()
+
+    val navigationEvent by viewModel.navigationEvent.collectAsState()
+
     var email by remember {
         mutableStateOf("")
     }
     var password by remember {
         mutableStateOf("")
     }
-
     val context = LocalContext.current
+    val userRole = viewModel.userRole
+
+    LaunchedEffect(navigationEvent) {
+        navigationEvent?.let { event ->
+            when (event) {
+                SignInNavigationEvent.AdminDashboard -> navController.navigate("admin_dashboard")
+                SignInNavigationEvent.JobList -> navController.navigate("job_list")
+            }
+        }
+    }
     LaunchedEffect(key1 = uiState.value) {
 
         when (uiState.value) {
             is SignInState.Success -> {
-                navController.navigate("home")
+                //Navigate based on the role
+                when (userRole) {
+                    "Admin" -> navController.navigate("admin_dashboard")
+                    "User" -> navController.navigate("job_list")
+                    else -> navController.navigate("job_list")
+                }
+
             }
 
             is SignInState.Error -> {
-                Toast.makeText(context, "Sign In failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Sign In failed: ${viewModel.errorMessage}", Toast.LENGTH_SHORT).show()
             }
 
             else -> {}
