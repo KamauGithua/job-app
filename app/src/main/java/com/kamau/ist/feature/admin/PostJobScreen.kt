@@ -106,7 +106,8 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
                             deadline = deadline
                         )
                         )
-                        navController.popBackStack()
+                        navController.navigate("job_list")
+//                        navController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

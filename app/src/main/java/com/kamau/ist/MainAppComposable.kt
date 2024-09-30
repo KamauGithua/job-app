@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kamau.ist.feature.admin.AdminDashboardScreen
+import com.kamau.ist.feature.admin.PostJobScreen
 import com.kamau.ist.feature.application.ApplicationFormScreen
 import com.kamau.ist.feature.auth.signin.SignInScreen
 import com.kamau.ist.feature.auth.signup.SignUpScreen
@@ -26,8 +27,6 @@ import com.kamau.ist.feature.job.JobListScreen
 fun MainApp() {
     Surface(modifier = Modifier.fillMaxSize()) {
         val navController = rememberNavController()
-//        val currentUser = FirebaseAuth.getInstance().currentUser
-//        val start = if (currentUser != null) "home" else "login"
 
 
         var startDestination by remember { mutableStateOf("login") }
@@ -67,6 +66,9 @@ fun MainApp() {
             }
             composable("signup") {
                 SignUpScreen(navController)
+            }
+            composable("post_job") {
+                PostJobScreen(navController)
             }
 
             composable("job_list") { JobListScreen(navController) }
