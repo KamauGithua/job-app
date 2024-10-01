@@ -48,6 +48,10 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
                     Button(onClick = { navController.navigate("application_form/$jobId") }) {
                         Text(text = "Apply Now")
                     }
+                    Button(onClick = {
+                        }) {
+                        Text(text = "Save")
+                    }
                 }
             }
         )
