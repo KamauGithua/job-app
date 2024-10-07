@@ -12,19 +12,28 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 //import androidx.compose.runtime.changelist.Operation.AdvanceSlotsBy.name
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.kamau.ist.feature.profile.ProfileScreen
 import com.kamau.ist.feature.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProfileActivity : ComponentActivity() {
-    private var profileViewModel: ProfileViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
+
+    // Define user data
+    private var name: String = ""
+    private var email: String = ""
+    private var workplace: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+            val navController = rememberNavController()
+
             // Your Composable ProfileScreen goes here
-            ProfileScreen(navController = ... ; profileViewModel = profileViewModel)
+            ProfileScreen(navController = navController, profileViewModel = profileViewModel)
 //
         }
     }

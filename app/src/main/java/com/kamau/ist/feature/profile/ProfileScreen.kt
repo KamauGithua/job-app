@@ -18,17 +18,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.kamau.ist.R
 
 @Composable
-fun ProfileScreen(navController: NavHostController, profileViewModel: ProfileViewModel) {
-    var name by remember { mutableStateOf("Kamau") }
-    var email by remember { mutableStateOf("kamauleakey99@gmail.com") }
-    var workplace by remember { mutableStateOf("GOOGLE") }
+fun ProfileScreen(navController : NavController, profileViewModel : ProfileViewModel) {
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var workplace by remember { mutableStateOf("") }
     var profilePicture by remember { mutableStateOf("https://example.com/default_profile_pic.png") }  // Default profile picture URL
+
+
 
     Column(
         modifier = Modifier
