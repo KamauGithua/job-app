@@ -24,17 +24,47 @@ class ProfileViewModel @Inject constructor(
     var currentUser: AppUser? = null
         private set
 
-    // Function to open gallery and select image
+    // Function to open gallery and select an image
     fun openGalleryForImageSelection() {
-        // This is just a placeholder, use an Intent to open the gallery
+        // This is just a placeholder function.
+        // In your Activity or Fragment, use an Intent to open the gallery.
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        // Trigger this intent in your activity and handle the result
+        // Start activity with the intent and handle the result in your Activity/Fragment
     }
 
-    // Function to save profile details
-    fun saveProfile(name: String, email: String, workplace: String, profilePicture: String) {
+    // Function to upload profile picture to Firebase Storage and update the Firestore document
+    fun uploadProfilePicture(imageUri: Uri, onUploadSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+        val fileRef = storageReference.child("profile_pictures/${currentUser?.uid}.jpg")
+
+        fileRef.putFile(imageUri)
+            .addOnSuccessListener {
+                // Get the download URL of the uploaded image
+                fileRef.downloadUrl.addOnSuccessListener { uri ->
+                    val downloadUrl = uri.toString()
+                    // Update the user's profile picture URL in Firestore
+                    currentUser?.let { user ->
+                        user.profilePictureUrl = downloadUrl
+                        updateUserProfile(user) { success ->
+                            if (success) {
+                                onUploadSuccess(downloadUrl)
+                            } else {
+                                onFailure(Exception("Failed to update profile in Firestore"))
+                            }
+                        }
+                    }
+                }.addOnFailureListener { exception ->
+                    onFailure(exception)
+                }
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
+
+    // Function to save profile details to Firestore
+    fun saveProfile(name: String, email: String, workplace: String, profilePicture: String, onComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             val updatedUser = currentUser?.copy(
                 name = name,
@@ -43,25 +73,31 @@ class ProfileViewModel @Inject constructor(
                 profilePictureUrl = profilePicture
             )
 
-            if (updatedUser != null) {
-                repository.updateUserProfile(updatedUser)
+            updatedUser?.let {
+                val result = repository.updateUserProfile(it)
+                onComplete(result.isSuccess)
+            } ?: onComplete(false)
+        }
+    }
+
+    // Function to fetch user profile from Firestore
+    fun fetchUserProfile(userId: String, onComplete: (AppUser?) -> Unit) {
+        viewModelScope.launch {
+            val result = repository.getUserProfile(userId)
+            if (result.isSuccess) {
+                currentUser = result.getOrNull()
+                onComplete(currentUser)
+            } else {
+                onComplete(null)
             }
         }
     }
 
-    // Function to upload profile picture to Firebase Storage
-    fun uploadProfilePicture(imageUri: Uri, onSuccess: (String) -> Unit) {
-        val fileRef = storageReference.child("profile_pictures/${currentUser?.uid}.jpg")
-        fileRef.putFile(imageUri)
-            .addOnSuccessListener {
-                // Get the download URL
-                fileRef.downloadUrl.addOnSuccessListener { uri ->
-                    onSuccess(uri.toString()) // Return the URL of the uploaded image
-                }
-            }
-            .addOnFailureListener { e ->
-                // Handle errors here
-                println("Error uploading image: ${e.message}")
-            }
+    // Function to update the user profile in Firestore
+    private fun updateUserProfile(user: AppUser, onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val result = repository.updateUserProfile(user)
+            onComplete(result.isSuccess)
+        }
     }
 }

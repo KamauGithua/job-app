@@ -5,7 +5,7 @@ data class AppUser(
     val name: String = "",
     val email: String = "",
     val workplace: String? = "",
-    val profilePictureUrl: String? = "",
+    var profilePictureUrl: String? = "",
 // Possible values: "Admin" or "User"
     val role: String = ""
 )
