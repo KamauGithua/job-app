@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,13 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.kamau.ist.R
 
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(navController: NavHostController, profileViewModel: ProfileViewModel) {
     var name by remember { mutableStateOf("Kamau") }
     var email by remember { mutableStateOf("kamauleakey99@gmail.com") }
     var workplace by remember { mutableStateOf("GOOGLE") }
+    var profilePicture by remember { mutableStateOf("https://example.com/default_profile_pic.png") }  // Default profile picture URL
 
     Column(
         modifier = Modifier
@@ -36,7 +40,7 @@ fun ProfileScreen(navController: NavHostController) {
 
         // Profile Picture Section
         Image(
-            painter = painterResource(id = R.drawable.personal),
+            painter = rememberAsyncImagePainter(profilePicture),
             contentDescription = "Profile Picture",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -44,9 +48,21 @@ fun ProfileScreen(navController: NavHostController) {
                 .clip(CircleShape)
         )
 
+        // Edit Button to change profile picture
+        IconButton(onClick = {
+            // Open the gallery to select a profile picture
+            profileViewModel.openGalleryForImageSelection()
+        }) {
+            Icon(
+                Icons.Rounded.Add,
+//                painter = painterResource(id = R.drawable.ic_edit),
+                contentDescription = "Edit Profile Picture"
+            )
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
 
-        // User's Name
+        // User's Name and Email
         Text(text = name, fontSize = 24.sp, style = MaterialTheme.typography.bodyMedium)
         Text(text = email, fontSize = 16.sp, color = Color.Gray)
 
@@ -76,7 +92,8 @@ fun ProfileScreen(navController: NavHostController) {
         // Save Button
         Button(
             onClick = {
-                // Handle save profile logic here
+                // Update the profile in Firestore
+                profileViewModel.saveProfile(name, email, workplace, profilePicture)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
