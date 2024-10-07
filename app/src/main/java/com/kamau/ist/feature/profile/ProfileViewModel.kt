@@ -39,6 +39,7 @@ class ProfileViewModel @Inject constructor(
             val updatedUser = currentUser?.copy(
                 name = name,
                 email = email,
+                workplace = workplace,
                 profilePictureUrl = profilePicture
             )
 

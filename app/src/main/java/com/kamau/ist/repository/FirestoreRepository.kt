@@ -81,7 +81,16 @@ class FirestoreRepository @Inject constructor(
 
     suspend fun updateUserProfile(user: AppUser): Result<Void?> {
         return try {
-            usersCollection.document(user.uid).set(user).await()
+            // Create a map to store user data, including the new 'workplace' field
+            val userMap = mapOf(
+                "uid" to user.uid,
+                "name" to user.name,
+                "email" to user.email,
+                "workplace" to user.workplace,  // Include the workplace field
+                "profilePictureUrl" to user.profilePictureUrl
+            )
+// Save the userMap to Firestore
+            usersCollection.document(user.uid).set(userMap).await()
             Result.success(null)
         } catch (e: Exception) {
             Result.failure(e)
