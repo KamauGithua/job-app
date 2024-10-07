@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.kamau.ist.model.AppUser
 import com.kamau.ist.repository.FirestoreRepository
@@ -35,7 +34,13 @@ class ProfileViewModel @Inject constructor(
     }
 
     // Function to upload profile picture to Firebase Storage and update the Firestore document
-    fun uploadProfilePicture(imageUri: Uri, onUploadSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+    fun uploadProfilePicture(
+        imageUri: Uri,
+        onUploadSuccess: (String) -> Unit,
+        onComplete: () -> Unit,
+//        onUploadSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val fileRef = storageReference.child("profile_pictures/${currentUser?.uid}.jpg")
 
         fileRef.putFile(imageUri)
@@ -49,17 +54,21 @@ class ProfileViewModel @Inject constructor(
                         updateUserProfile(user) { success ->
                             if (success) {
                                 onUploadSuccess(downloadUrl)
+                                onComplete()
                             } else {
                                 onFailure(Exception("Failed to update profile in Firestore"))
+                                onComplete()
                             }
                         }
                     }
                 }.addOnFailureListener { exception ->
                     onFailure(exception)
+                    onComplete()
                 }
             }
             .addOnFailureListener { exception ->
                 onFailure(exception)
+                onComplete()
             }
     }
 

@@ -18,14 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.kamau.ist.R
 
 @Composable
 fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel = hiltViewModel()) {
@@ -34,12 +32,33 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
     var workplace by remember { mutableStateOf("") }
     var profilePictureUri by remember { mutableStateOf<Uri?>(null) } // Holds the URI of the profile picture
 
+
     // Launcher to open gallery and get the image URI
-    val launcher = rememberLauncherForActivityResult(
+    val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        profilePictureUri = uri // Update the profile picture URI when the user selects an image
+        uri?.let {
+            // Call ViewModel function to upload the selected image
+            profileViewModel.uploadProfilePicture(imageUri = it,
+                onUploadSuccess = { imageUrl ->
+                // After successful upload, update the profile picture URI
+//                profilePictureUri = Uri.parse(imageUrl.toString()) // Assume imageUrl is a String URL
+                profilePictureUri = Uri.parse(imageUrl.toString()) // Assume imageUrl is a String URL
+            },
+            onComplete = {
+                    // Perform any actions after upload completes
+                    println("Image upload completed successfully!")
+                },
+                onFailure = { exception ->
+                    println("Failed to upload image: ${exception.message}")
+                }
+            )
+
+
+
+        }
     }
+
 
     Column(
         modifier = Modifier
@@ -80,7 +99,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
             IconButton(
                 onClick = {
                     // Open the gallery to select a profile picture
-                    launcher.launch("image/*")
+                    imagePickerLauncher.launch("image/*")
                 },
                 modifier = Modifier
                     .size(30.dp)
@@ -138,7 +157,17 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
         Button(
             onClick = {
                 // Update the profile in Firestore or any other backend service
-                profileViewModel.saveProfile(name, email, workplace, profilePictureUri.toString())
+                profileViewModel.saveProfile(
+//                    name, email, workplace, profilePictureUri.toString())
+                    name = name,
+                    email = email,
+                    workplace = workplace,
+                    profilePicture = profilePictureUri.toString(),
+                    onComplete = {
+                        println("Profile saved successfully!")
+                    }
+                )
+
             },
             modifier = Modifier.fillMaxWidth()
         ) {
