@@ -67,6 +67,14 @@ fun MainApp() {
             composable("signup") {
                 SignUpScreen(navController)
             }
+            composable("homescreen") {
+                HomeScreen(navController)
+            }
+            composable("profile") {
+                SignUpScreen(navController)
+            }composable("signup") {
+                SignUpScreen(navController)
+            }
             composable("post_job") {
                 PostJobScreen(navController)
             }
