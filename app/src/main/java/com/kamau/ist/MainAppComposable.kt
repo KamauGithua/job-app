@@ -22,6 +22,7 @@ import com.kamau.ist.feature.auth.signup.SignUpScreen
 import com.kamau.ist.feature.home.HomeScreen
 import com.kamau.ist.feature.job.JobDetailScreen
 import com.kamau.ist.feature.job.JobListScreen
+import com.kamau.ist.feature.profile.ProfileScreen
 
 @Composable
 fun MainApp() {
@@ -67,14 +68,15 @@ fun MainApp() {
             composable("signup") {
                 SignUpScreen(navController)
             }
-            composable("homescreen") {
+            composable("home") {
                 HomeScreen(navController)
             }
             composable("profile") {
-                SignUpScreen(navController)
-            }composable("signup") {
-                SignUpScreen(navController)
+                ProfileScreen(navController)
             }
+//            composable("signup") {
+//                SignUpScreen(navController)
+//            }
             composable("post_job") {
                 PostJobScreen(navController)
             }

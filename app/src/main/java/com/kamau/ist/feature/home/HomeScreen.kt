@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.kamau.ist.MainApp
 import com.kamau.ist.ui.theme.Purple80
 import kotlinx.coroutines.launch
 
@@ -43,19 +44,19 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Welcome User",
-                fontSize = 30.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Text(text = "Welcome User")
+
+
         }
     }
 }
 
+
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavBotSheet() {
+fun NavBotSheet(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current.applicationContext
@@ -99,7 +100,8 @@ fun NavBotSheet() {
                         coroutineScope.launch {
                             drawerState.close()
                         }
-                        navController.navigate(Screens.Home.screen) {
+
+                        navController.navigate("home") {
                             popUpTo(0)
                         }
                     }
@@ -119,31 +121,35 @@ fun NavBotSheet() {
                         coroutineScope.launch {
                             drawerState.close()
                         }
-                        navController.navigate(Screens.Profile.screen) {
+
+                        navController.navigate("profile") {
                             popUpTo(0)
+
                         }
+
+//
                     }
                 )
                 // Settings
-                NavigationDrawerItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = "settings",
-                            modifier = Modifier.size(27.dp)
-                        )
-                    },
-                    label = { Text(text = "Settings", fontSize = 17.sp) },
-                    selected = false,
-                    onClick = {
-                        coroutineScope.launch {
-                            drawerState.close()
-                        }
-                        navController.navigate(Screens.Settings.screen) {
-                            popUpTo(0)
-                        }
-                    }
-                )
+//                NavigationDrawerItem(
+//                    icon = {
+//                        Icon(
+//                            imageVector = Icons.Default.Settings,
+//                            contentDescription = "settings",
+//                            modifier = Modifier.size(27.dp)
+//                        )
+//                    },
+//                    label = { Text(text = "Settings", fontSize = 17.sp) },
+//                    selected = false,
+//                    onClick = {
+//                        coroutineScope.launch {
+//                            drawerState.close()
+//                        }
+//                        navController.navigate(Screens.Settings.screen) {
+//                            popUpTo(0)
+//                        }
+//                    }
+//                )
                 // Logout
                 NavigationDrawerItem(
                     icon = {
@@ -192,7 +198,7 @@ fun NavBotSheet() {
                     IconButton(
                         onClick = {
                             selected.value = Icons.Default.Home
-                            navController.navigate(Screens.Home.screen) {
+                            navController.navigate("home") {
                                 popUpTo(0)
                             }
                         },
@@ -206,34 +212,34 @@ fun NavBotSheet() {
                         )
                     }
                     // Search
-                    IconButton(
-                        onClick = {
-                            selected.value = Icons.Default.Search
-                            navController.navigate(Screens.Search.screen) {
-                                popUpTo(0)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(
-                            Icons.Default.Search,
-                            contentDescription = null,
-                            modifier = Modifier.size(26.dp),
-                            tint = if (selected.value == Icons.Default.Search) Color.White else Color.DarkGray
-                        )
-                    }
-                    // Floating Button
+//                    IconButton(
+//                        onClick = {
+//                            selected.value = Icons.Default.Search
+//                            navController.navigate(Screens.Search.screen) {
+//                                popUpTo(0)
+//                            }
+//                        },
+//                        modifier = Modifier.weight(1f)
+//                    ) {
+//                        Icon(
+//                            Icons.Default.Search,
+//                            contentDescription = null,
+//                            modifier = Modifier.size(26.dp),
+//                            tint = if (selected.value == Icons.Default.Search) Color.White else Color.DarkGray
+//                        )
+//                    }
+//                     Floating Button
                     FloatingActionButton(
                         onClick = { showBottomSheet = true },
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null, tint = Purple80)
                     }
-                    // Notifications
+                    // jobs
                     IconButton(
                         onClick = {
                             selected.value = Icons.Default.Notifications
-                            navController.navigate(Screens.Notifications.screen) {
+                            navController.navigate("job_list") {
                                 popUpTo(0)
                             }
                         },
@@ -246,11 +252,11 @@ fun NavBotSheet() {
                             tint = if (selected.value == Icons.Default.Notifications) Color.White else Color.DarkGray
                         )
                     }
-                    // JobList
+                    // JobListing details
                     IconButton(
                         onClick = {
                             selected.value = Icons.Default.Info
-                            navController.navigate(Screens.JobListScreen.screen) {
+                            navController.navigate("job_detail/{jobId}") {
                                 popUpTo(0)
                             }
                         },
@@ -267,7 +273,7 @@ fun NavBotSheet() {
                     IconButton(
                         onClick = {
                             selected.value = Icons.Default.Person
-                            navController.navigate(Screens.Profile.screen) {
+                            navController.navigate("profile") {
                                 popUpTo(0)
                             }
                         },
@@ -296,37 +302,41 @@ fun NavBotSheet() {
                     ) {
                         BottomSheetItem(
                             icon = Icons.Default.ThumbUp,
-                            title = "Create a Post"
+                            title = "Create a Blog "
                         ) {
                             showBottomSheet = false
-                            navController.navigate(Screens.Post.screen) {
+                            navController.navigate("") {
                                 popUpTo(0)
                             }
                         }
-                        BottomSheetItem(
-                            icon = Icons.Default.Star,
-                            title = "Add a Job"
-                        ) {
-                            Toast.makeText(context, "Story", Toast.LENGTH_SHORT).show()
-                        }
-                        BottomSheetItem(
-                            icon = Icons.Default.PlayArrow,
-                            title = "Save a Job"
-                        ) {
-                            Toast.makeText(context, "Reels", Toast.LENGTH_SHORT).show()
-                        }
-                        BottomSheetItem(
-                            icon = Icons.Default.Favorite,
-                            title = "Go To My Network"
-                        ) {
-                            Toast.makeText(context, "Live", Toast.LENGTH_SHORT).show()
-                        }
+//                        BottomSheetItem(
+//                            icon = Icons.Default.Star,
+//                            title = "Add a Job"
+//                        ) {
+//                            Toast.makeText(context, "Story", Toast.LENGTH_SHORT).show()
+//                        }
+//                        BottomSheetItem(
+//                            icon = Icons.Default.PlayArrow,
+//                            title = "Save a Job"
+//                        ) {
+//                            Toast.makeText(context, "Reels", Toast.LENGTH_SHORT).show()
+//                        }
+//                        BottomSheetItem(
+//                            icon = Icons.Default.Favorite,
+//                            title = "Go To My Network"
+//                        ) {
+//                            Toast.makeText(context, "Live", Toast.LENGTH_SHORT).show()
+//                        }
                     }
                 }
             }
         }
     }
 }
+
+
+
+
 
 @Composable
 fun BottomSheetItem(
@@ -347,3 +357,6 @@ fun BottomSheetItem(
         )
     }
 }
+
+
+
