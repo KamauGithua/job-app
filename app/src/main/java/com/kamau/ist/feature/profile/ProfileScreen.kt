@@ -1,12 +1,16 @@
 package com.kamau.ist.feature.profile
 
-
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,20 +22,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.kamau.ist.R
 
 @Composable
-fun ProfileScreen(navController : NavController, profileViewModel : ProfileViewModel) {
+fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel = hiltViewModel()) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var workplace by remember { mutableStateOf("") }
-    var profilePicture by remember { mutableStateOf("https://example.com/default_profile_pic.png") }  // Default profile picture URL
+    var profilePictureUri by remember { mutableStateOf<Uri?>(null) } // Holds the URI of the profile picture
 
-
+    // Launcher to open gallery and get the image URI
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        profilePictureUri = uri // Update the profile picture URI when the user selects an image
+    }
 
     Column(
         modifier = Modifier
@@ -42,32 +50,56 @@ fun ProfileScreen(navController : NavController, profileViewModel : ProfileViewM
         Spacer(modifier = Modifier.height(30.dp))
 
         // Profile Picture Section
-        Image(
-            painter = rememberAsyncImagePainter(profilePicture),
-            contentDescription = "Profile Picture",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-        )
+        Box(
+            modifier = Modifier.size(120.dp),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            // Display the profile picture or a default person icon if no image is selected
+            if (profilePictureUri != null) {
+                Image(
+                    painter = rememberAsyncImagePainter(profilePictureUri),
+                    contentDescription = "Profile Picture",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                // Default profile picture (e.g., person icon)
+                Icon(
+                    imageVector = Icons.Rounded.Person,
+                    contentDescription = "Default Profile Picture",
+                    tint = Color.Gray,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                )
+            }
 
-        // Edit Button to change profile picture
-        IconButton(onClick = {
-            // Open the gallery to select a profile picture
-            profileViewModel.openGalleryForImageSelection()
-        }) {
-            Icon(
-                Icons.Rounded.Add,
-//                painter = painterResource(id = R.drawable.ic_edit),
-                contentDescription = "Edit Profile Picture"
-            )
+            // Edit Button to change profile picture
+            IconButton(
+                onClick = {
+                    // Open the gallery to select a profile picture
+                    launcher.launch("image/*")
+                },
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Add,
+                    contentDescription = "Edit Profile Picture",
+                    tint = Color.White
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         // User's Name and Email
-        Text(text = name, fontSize = 24.sp, style = MaterialTheme.typography.bodyMedium)
-        Text(text = email, fontSize = 16.sp, color = Color.Gray)
+        Text(text = name.ifEmpty { "Name not set" }, fontSize = 24.sp, style = MaterialTheme.typography.bodyMedium)
+        Text(text = email.ifEmpty { "Email not set" }, fontSize = 16.sp, color = Color.Gray)
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -76,6 +108,16 @@ fun ProfileScreen(navController : NavController, profileViewModel : ProfileViewM
             value = name,
             onValueChange = { name = it },
             label = { Text("Name") },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        TextField(
+            value = email,
+            onValueChange = { email  = it },
+            label = { Text("Email") },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
             modifier = Modifier.fillMaxWidth()
         )
@@ -95,8 +137,8 @@ fun ProfileScreen(navController : NavController, profileViewModel : ProfileViewM
         // Save Button
         Button(
             onClick = {
-                // Update the profile in Firestore
-                profileViewModel.saveProfile(name, email, workplace, profilePicture)
+                // Update the profile in Firestore or any other backend service
+                profileViewModel.saveProfile(name, email, workplace, profilePictureUri.toString())
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -117,5 +159,3 @@ fun ProfileScreen(navController : NavController, profileViewModel : ProfileViewM
         }
     }
 }
-
-

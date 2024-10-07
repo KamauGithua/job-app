@@ -59,7 +59,7 @@ fun SignInScreen(navController: NavController){
         navigationEvent?.let { event ->
             when (event) {
                 SignInNavigationEvent.AdminDashboard -> navController.navigate("admin_dashboard")
-                SignInNavigationEvent.JobList -> navController.navigate("job_list")
+                SignInNavigationEvent.JobList -> navController.navigate("home")
             }
         }
     }
@@ -70,8 +70,8 @@ fun SignInScreen(navController: NavController){
                 //Navigate based on the role
                 when (userRole) {
                     "Admin" -> navController.navigate("admin_dashboard")
-                    "User" -> navController.navigate("job_list")
-                    else -> navController.navigate("job_list")
+                    "User" -> navController.navigate("home")
+                    else -> navController.navigate("home")
                 }
 
             }

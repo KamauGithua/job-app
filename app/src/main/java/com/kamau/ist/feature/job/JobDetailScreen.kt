@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -24,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,6 +41,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import androidx.compose.material3.Switch
 import com.kamau.ist.feature.auth.signin.SignInScreen
 import com.kamau.ist.model.Job
 
@@ -60,10 +63,11 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
                 )
             },
             content = {
-                Column(modifier = Modifier
-                    .padding(it)
-                    .padding(16.dp)
-                    .fillMaxSize()
+                Column(
+                    modifier = Modifier
+                        .padding(it)
+                        .padding(16.dp)
+                        .fillMaxSize()
                 ) {
                     Image(
                         painter = rememberAsyncImagePainter(job.companyLogoUrl), // Use actual URL
@@ -162,7 +166,10 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
 
 
                 // Eighth Row: Set Alert for Similar Jobs
-                Row(modifier = Modifier.padding(top = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(text = "Set alert for similar jobs")
                     Spacer(modifier = Modifier.weight(1f))
                     TextField(
@@ -181,7 +188,7 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
                 // Ninth Row: Job Skills
                 Text(
                     text = "Skills",
-                    style = MaterialTheme.typography.h6,
+//                    style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 Text(
@@ -192,7 +199,7 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
                 // Tenth Row: About the Job Company
                 Text(
                     text = "About the Job Company",
-                    style = MaterialTheme.typography.h6,
+//                    style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -222,43 +229,47 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
                 // Eleventh Row: More Jobs
                 Text(
                     text = "More Jobs",
-                    style = MaterialTheme.typography.h6,
+//                    style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 LazyColumn {
-                    items(jobViewModel.moreJobListings) { moreJob ->
+
+                    items(viewModel.jobList) { moreJob ->
                         MoreJobItem(moreJob)
+//                    items(jobViewModel.moreJobListings) { moreJob ->
+//                        MoreJobItem(moreJob)
                     }
                 }
-
-
-                Text(text = job.description)
-                    Text(text = "Company: ${job.company}")
-                    Text(text = "Requirements: ${job.requirements}")
-                    Text(text = "Deadline: ${job.deadline}")
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(onClick = { navController.navigate("application_form/$jobId") }) {
-                        Text(text = "Apply Now")
-                    }
-                    Button(onClick = {
-                        }) {
-                        Text(text = "Save")
-                    }
-                }
-
             }
+
         )
     }
 }
 
 
 
+//                Text(text = job.description)
+//                    Text(text = "Company: ${job.company}")
+//                    Text(text = "Requirements: ${job.requirements}")
+//                    Text(text = "Deadline: ${job.deadline}")
+//
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    Button(onClick = { navController.navigate("application_form/$jobId") }) {
+//                        Text(text = "Apply Now")
+//                    }
+//                    Button(onClick = {
+//                        }) {
+//                        Text(text = "Save")
+//                    }
+
+
+
+
 @Composable
 fun MoreJobItem(job: Job) {
     Column(modifier = Modifier.padding(8.dp)) {
-        Text(text = job.title, style = MaterialTheme.typography.h6)
+        Text(text = job.title)
         Text(text = "Company: ${job.companyName}")
         Text(text = "Location: ${job.location}")
         Text(text = "Category: ${job.category}")

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -37,6 +38,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()) {
+
+        NavBotSheet(navController)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -45,6 +48,8 @@ fun HomeScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Welcome User")
+
+
 
 
         }
@@ -238,8 +243,25 @@ fun NavBotSheet(navController: NavController) {
                     // jobs
                     IconButton(
                         onClick = {
-                            selected.value = Icons.Default.Notifications
+                            selected.value = Icons.Default.MailOutline
                             navController.navigate("job_list") {
+                                popUpTo(0)
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            Icons.Default.MailOutline,
+                            contentDescription = null,
+                            modifier = Modifier.size(26.dp),
+                            tint = if (selected.value == Icons.Default.MailOutline) Color.White else Color.DarkGray
+                        )
+                    }
+                    // JobListing details
+                    IconButton(
+                        onClick = {
+                            selected.value = Icons.Default.Notifications
+                            navController.navigate("job_detail/{jobId}") {
                                 popUpTo(0)
                             }
                         },
@@ -250,23 +272,6 @@ fun NavBotSheet(navController: NavController) {
                             contentDescription = null,
                             modifier = Modifier.size(26.dp),
                             tint = if (selected.value == Icons.Default.Notifications) Color.White else Color.DarkGray
-                        )
-                    }
-                    // JobListing details
-                    IconButton(
-                        onClick = {
-                            selected.value = Icons.Default.Info
-                            navController.navigate("job_detail/{jobId}") {
-                                popUpTo(0)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(
-                            Icons.Default.Info,
-                            contentDescription = null,
-                            modifier = Modifier.size(26.dp),
-                            tint = if (selected.value == Icons.Default.Info) Color.White else Color.DarkGray
                         )
                     }
                     // Profile
