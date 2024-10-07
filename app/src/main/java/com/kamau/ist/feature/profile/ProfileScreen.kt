@@ -105,7 +105,7 @@ fun ProfileScreen(navController: NavHostController, profileViewModel: ProfileVie
         // Back to Main Page Button
         Button(
             onClick = {
-                navController.navigate("profile")
+                navController.navigate("home")
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)

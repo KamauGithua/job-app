@@ -1,7 +1,10 @@
 package com.kamau.ist.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.kamau.ist.model.Job
+import com.kamau.ist.model.AppUser // Updated to use AppUser
+
 import com.kamau.ist.model.JobApplication
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -11,9 +14,9 @@ class FirestoreRepository @Inject constructor(
 ) {
 
 
-
     private val jobsCollection = firestore.collection("jobs")
     private val applicationsCollection = firestore.collection("applications")
+    private val usersCollection = firestore.collection("users")
 
 
     fun getUserRole(userId: String, onComplete: (String?) -> Unit) {
@@ -58,6 +61,36 @@ class FirestoreRepository @Inject constructor(
         return try {
             val applicationId = applicationsCollection.document().id
             applicationsCollection.document(applicationId).set(application).await()
+            Result.success(null)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    //User profile functions
+
+    suspend fun getUserProfile(userId: String): Result<AppUser> {
+        return try {
+            val document = usersCollection.document(userId).get().await()
+            val user = document.toObject(AppUser::class.java) ?: AppUser()
+            Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateUserProfile(user: AppUser): Result<Void?> {
+        return try {
+            usersCollection.document(user.uid).set(user).await()
+            Result.success(null)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateProfilePicture(userId: String, newProfilePictureUrl: String): Result<Void?> {
+        return try {
+            usersCollection.document(userId).update("profilePictureUrl", newProfilePictureUrl).await()
             Result.success(null)
         } catch (e: Exception) {
             Result.failure(e)
