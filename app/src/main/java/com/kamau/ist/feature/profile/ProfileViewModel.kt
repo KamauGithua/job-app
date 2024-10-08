@@ -38,7 +38,6 @@ class ProfileViewModel @Inject constructor(
         imageUri: Uri,
         onUploadSuccess: (String) -> Unit,
         onComplete: () -> Unit,
-//        onUploadSuccess: (String) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         val fileRef = storageReference.child("profile_pictures/${currentUser?.uid}.jpg")
@@ -73,7 +72,13 @@ class ProfileViewModel @Inject constructor(
     }
 
     // Function to save profile details to Firestore
-    fun saveProfile(name: String, email: String, workplace: String, profilePicture: String, onComplete: (Boolean) -> Unit) {
+    fun saveProfile(
+        name: String,
+        email: String,
+        workplace: String,
+        profilePicture: String,
+        onComplete: () -> Unit
+    ) {
         viewModelScope.launch {
             val updatedUser = currentUser?.copy(
                 name = name,
@@ -84,8 +89,11 @@ class ProfileViewModel @Inject constructor(
 
             updatedUser?.let {
                 val result = repository.updateUserProfile(it)
-                onComplete(result.isSuccess)
-            } ?: onComplete(false)
+//                onComplete(result.isSuccess)
+                onComplete()
+            } ?:
+//            onComplete(false)
+            onComplete()
         }
     }
 

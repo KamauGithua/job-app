@@ -39,10 +39,10 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
     ) { uri: Uri? ->
         uri?.let {
             // Call ViewModel function to upload the selected image
-            profileViewModel.uploadProfilePicture(imageUri = it,
+            profileViewModel.uploadProfilePicture(
+                imageUri = it,
                 onUploadSuccess = { imageUrl ->
                 // After successful upload, update the profile picture URI
-//                profilePictureUri = Uri.parse(imageUrl.toString()) // Assume imageUrl is a String URL
                 profilePictureUri = Uri.parse(imageUrl.toString()) // Assume imageUrl is a String URL
             },
             onComplete = {
@@ -76,7 +76,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
             // Display the profile picture or a default person icon if no image is selected
             if (profilePictureUri != null) {
                 Image(
-                    painter = rememberAsyncImagePainter(profilePictureUri),
+                    painter = rememberAsyncImagePainter(model = profilePictureUri),
                     contentDescription = "Profile Picture",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
