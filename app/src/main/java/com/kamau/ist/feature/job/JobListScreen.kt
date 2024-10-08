@@ -64,8 +64,6 @@ fun JobListScreen(navController: NavController, viewModel: JobViewModel = hiltVi
         // Suggested Jobs Section
         SuggestedJobsSection(navController)
 
-        // Recent Jobs Section
-//        RecentJobsSection(navController)
     }
 }
 

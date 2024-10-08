@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,22 +56,82 @@ import com.kamau.ist.model.Job
 @Composable
 fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: JobViewModel = hiltViewModel()) {
     val job = viewModel.jobList.find { it.id == jobId }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        // Top Bar
+        TopAppBar(navController)
+
+//        AboutJobsSection
+
+        AboutJobsSection(navController)
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopAppBar(navController: NavController) {
+
+    TopAppBar(title = { Text("Job Details", fontSize = 20.sp, fontWeight = FontWeight.Bold) },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Red),
+        navigationIcon = {
+            IconButton(onClick = {
+                navController.navigate("home")
+            }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+        }
+    )
+
+}
+@Composable
+fun AboutJobsSection( navController : NavController, viewModel: JobViewModel = hiltViewModel()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "View Job", fontWeight = FontWeight.Bold)
+//            TextButton(
+//                onClick = { /*TODO: Navigate to See All*/ }
+//            ) {
+//                Text(text = "See All", color = Color.Red)
+//            }
+        }
+
+        LazyColumn(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+        ) {
+            items(viewModel.jobList) { job ->
+                JobItem(
+                    job = job,
+                    title = job.title,
+                    company = job.company,
+                    location = job.location,
+                    jobTypes = job.jobTypes,
+                    salaryRange = job.salaryRange,
+                    navController = navController,
+                    onClick = {
+                        navController.navigate("job_detail/${job.id}")
+                    }
+                )
+            }
+        }
+
+    }
+}
+
+
 
     if (job != null) {
         Scaffold(
-            topBar = {
-                TopAppBar(
-//                    title = { Text(job.title) },
-                    title = { Text(text = "Job Details") },
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                        }
-                    },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Red)
-                )
-            },
-            content = {
+
                 Column(
                     modifier = Modifier
                         .padding(it)
@@ -78,16 +139,16 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
                         .fillMaxSize()
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            painter = rememberAsyncImagePainter(job.companyLogoUrl), // Use actual URL
-                            contentDescription = "Company Logo",
-                            modifier = Modifier
-                                .size(50.dp)
-                                .clip(CircleShape)
-                                .background(Color.LightGray),
-                            contentScale = ContentScale.Crop
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
+//                        Image(
+//                            painter = rememberAsyncImagePainter(job.companyLogoUrl), // Use actual URL
+//                            contentDescription = "Company Logo",
+//                            modifier = Modifier
+//                                .size(50.dp)
+//                                .clip(CircleShape)
+//                                .background(Color.LightGray),
+//                            contentScale = ContentScale.Crop
+//                        )
+//                        Spacer(modifier = Modifier.width(16.dp))
                         Text(
 //                        text = job.company,
                             text = job.companyName,
@@ -246,7 +307,7 @@ fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: Job
 //                        MoreJobItem(moreJob)
                     }
                 }
-            }
+//            }
 
         )
     }
