@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,6 +37,16 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
     var company by remember { mutableStateOf("") }
     var requirements by remember { mutableStateOf("") }
     var deadline by remember { mutableStateOf("") }
+    var jobTypes by remember { mutableStateOf("") }
+    var salaryRange by remember { mutableStateOf("") }
+//    var companyLogoUrl by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var skills by remember { mutableStateOf("") }
+    var qualifications by remember { mutableStateOf("") }
+
+    val scrollState = rememberScrollState()
+
+
 
     Scaffold(
         topBar = {
@@ -49,7 +60,11 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
             )
         },
         content = {
-            Column(modifier = Modifier.padding(it).padding(16.dp)) {
+            Column(modifier = Modifier
+                .padding(it)
+                .padding(16.dp)
+                .verticalScroll(scrollState)) {
+
                 TextField(
                     value = title,
                     onValueChange = { title = it },
@@ -95,6 +110,55 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                TextField(
+                    value = jobTypes,
+                    onValueChange = { jobTypes = it },
+                    label = { Text("Job type") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = salaryRange,
+                    onValueChange = { salaryRange = it },
+                    label = { Text("salaryRange") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = location,
+                    onValueChange = { location = it },
+                    label = { Text("location") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = skills,
+                    onValueChange = { skills = it },
+                    label = { Text("skills") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = qualifications,
+                    onValueChange = { qualifications = it },
+                    label = { Text("qualifications") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Button(
                     onClick = {
                         viewModel.addJob(
@@ -103,8 +167,13 @@ fun PostJobScreen(navController: NavController, viewModel: JobViewModel = hiltVi
                             description = description,
                             company = company,
                             requirements = requirements,
-                            deadline = deadline
-                        )
+                            deadline = deadline,
+                            jobTypes = jobTypes,
+                            salaryRange = salaryRange,
+                            location = location,
+                            skills = skills,
+                            qualifications = qualifications,
+                                )
                         )
                         navController.navigate("job_list")
 //                        navController.popBackStack()

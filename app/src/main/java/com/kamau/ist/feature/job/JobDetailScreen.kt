@@ -56,21 +56,214 @@ import com.kamau.ist.model.Job
 fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: JobViewModel = hiltViewModel()) {
     val job = viewModel.jobList.find { it.id == jobId }
 
-//    if (job != null) {
-//         Text(text = )
-//    }
+    if (job != null) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+//                    title = { Text(job.title) },
+                    title = { Text(text = "Job Details") },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Red)
+                )
+            },
+            content = {
+                Column(
+                    modifier = Modifier
+                        .padding(it)
+                        .padding(16.dp)
+                        .fillMaxSize()
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = rememberAsyncImagePainter(job.companyLogoUrl), // Use actual URL
+                            contentDescription = "Company Logo",
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                                .background(Color.LightGray),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+//                        text = job.company,
+                            text = job.companyName,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(text = "Location: ${job.location}", color = Color.Gray)
+                        Text(text = "Posted on: ${job.postedDate}", color = Color.Gray)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+// Second Row: Location and Application Date
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceBetween,
+//                    verticalAlignment = Alignment.CenterVertically)
+                Text(
+                    text = "${job.category} • ${job.employmentType}",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Third Row: Job Category
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Fourth Row: Skills
+                Text(
+                    text = "Skills: ${job.skills.joinToString(", ")}",
+                    color = Color.Gray
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Fifth Row: Compare with other applicants
+                Text(
+                    text = "See how you compare to other applicants. Try Premium",
+                    color = Color.Blue,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Sixth Row: Apply and Save Buttons
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(
+                        onClick = { /* Handle Apply Action */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    ) {
+                        Text(text = "Apply", color = Color.White)
+                    }
+                    Button(
+                        onClick = { /* Handle Save Action */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                    ) {
+                        Text(text = "Save", color = Color.White)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Seventh Row: About the Job
+                Text(
+                    text = "About the job",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = job.description)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Qualifications Section
+                Text(
+                    text = "Qualifications",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = job.qualifications.joinToString("\n"))
+
+
+                // Eighth Row: Set Alert for Similar Jobs
+                Row(
+                    modifier = Modifier.padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Set alert for similar jobs")
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextField(
+                        value = job.alertLocation,
+                        onValueChange = { /* Handle Text Change */ },
+                        label = { Text("Location") },
+                        modifier = Modifier.width(200.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Switch(
+                        checked = job.isAlertActive,
+                        onCheckedChange = { /* Handle Toggle */ }
+                    )
+                }
+
+                // Ninth Row: Job Skills
+                Text(
+                    text = "Skills",
+//                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                Text(
+                    text = job.skills.joinToString(", "),
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                // Tenth Row: About the Job Company
+                Text(
+                    text = "About the Job Company",
+//                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = rememberImagePainter(data = job.companyLogoUrl),
+                        contentDescription = "Company Logo",
+                        modifier = Modifier.size(50.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(text = job.companyName)
+                        Button(onClick = { /* Handle Follow */ }) {
+                            Text(text = "+ Follow")
+                        }
+                    }
+                }
+
+
+
+                // Eleventh Row: More Jobs
+                Text(
+                    text = "More Jobs",
+//                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                LazyColumn {
+
+                    items(viewModel.jobList) { moreJob ->
+                        MoreJobItem(moreJob)
+//                    items(jobViewModel.moreJobListings) { moreJob ->
+//                        MoreJobItem(moreJob)
+                    }
+                }
+            }
+
+        )
+    }
 }
 
 
-//@Composable
-//fun MoreJobItem(job: Job) {
-//    Column(modifier = Modifier.padding(8.dp)) {
-//        Text(text = job.title)
-//        Text(text = "Company: ${job.companyName}")
-//        Text(text = "Location: ${job.location}")
-//        Text(text = "Category: ${job.category}")
-//    }
-//}
+
+
+@Composable
+fun MoreJobItem(job: Job) {
+    Column(modifier = Modifier.padding(8.dp)) {
+        Text(text = job.title)
+        Text(text = "Company: ${job.companyName}")
+        Text(text = "Location: ${job.location}")
+        Text(text = "Category: ${job.category}")
+    }
+}
 
 
 

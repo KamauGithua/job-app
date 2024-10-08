@@ -15,10 +15,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,7 +65,7 @@ fun JobListScreen(navController: NavController, viewModel: JobViewModel = hiltVi
         SuggestedJobsSection(navController)
 
         // Recent Jobs Section
-        RecentJobsSection(navController)
+//        RecentJobsSection(navController)
     }
 }
 
@@ -73,8 +77,10 @@ fun TopBar(navController: NavController) {
     TopAppBar(title = { Text("Job Listings", fontSize = 20.sp, fontWeight = FontWeight.Bold) },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Red),
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back to Home")
+            IconButton(onClick = {
+                navController.navigate("home")
+            }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         }
     )
@@ -97,7 +103,7 @@ fun SearchBar() {
         TextField(
             value = "",
             onValueChange = {},
-            placeholder = { Text(text = "Search anything") },
+            placeholder = { Text(text = "Search Jobs") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
@@ -134,6 +140,12 @@ fun SuggestedJobsSection( navController : NavController, viewModel: JobViewModel
             items(viewModel.jobList) { job ->
                 JobItem(
                     job = job,
+                    title = job.title,
+                    company = job.company,
+                    location = job.location,
+                    jobTypes = job.jobTypes,
+                    salaryRange = job.salaryRange,
+                    navController = navController,
                     onClick = {
                         navController.navigate("job_detail/${job.id}")
                     }
@@ -143,113 +155,75 @@ fun SuggestedJobsSection( navController : NavController, viewModel: JobViewModel
 
     }
 }
-
-
-@Composable
-fun RecentJobsSection( navController : NavController, viewModel: JobViewModel = hiltViewModel()) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Recent Jobs", fontWeight = FontWeight.Bold)
-            TextButton(
-                onClick = { /*TODO: Navigate to See All*/ }
-            ) {
-                Text(text = "See All", color = Color.Red)
-            }
-        }
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-//            .padding(it)
-            .padding(16.dp)
-        ) {
-            items(viewModel.jobList) { job ->
-                JobItem(
-                    job = job,
-                    onClick = {
-                        navController.navigate("job_detail/${job.id}")
-                    }
-                )
-            }
-        }
-
-    }
-}
-
-
 
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun JobItem(job: Job, onClick: () -> Unit,
-    title: String,
+            title: String,
     company: String,
     location: String,
-    jobTypes: List<String>,
+    jobTypes: String,
     salaryRange: String,
     navController: NavController
-) {
+    ) {
     Card(
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .size(width = 240.dp, height = 100.dp)
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
-        elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(8.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Text(text = company, color = Color.Gray, fontSize = 14.sp)
-            Spacer(modifier = Modifier.height(4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = location, color = Color.Gray, fontSize = 14.sp)
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = salaryRange, color = Color.Blue, fontWeight = FontWeight.Bold)
-
-            Spacer(modifier = Modifier.height(16.dp))
+        Row(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier
+                .weight(1f)
+                ) {
+                Text(text = job.title, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Red)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = job.company, color = Color.Gray)
+//                Spacer(modifier = Modifier.height(4.dp))
+                Text(text =  job.location, color = Color.Gray)
+//                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = job.jobTypes, color = Color.Red)
+//                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = job.salaryRange, color = Color.Red)
+//                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = job.skills, color = Color.Gray)
+//                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = job.deadline, color = Color.Gray)
+Spacer(modifier = Modifier.height(12.dp))
 
             Button(onClick = {
-                navController.navigate("jobDetail") // Passing first job type as example
+                navController.navigate("jobDetail")
+                             // Passing first job type as example
                 //                navController.navigate("notifications") // Passing first job type as example
-            }) {
+            },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
                 Text("View Job")
+            }
+//                Text(text = "Company: ${job.location}", color = Color.Gray)
+//                Text(text = "Company: ${job.jobTypes}", color = Color.Gray)
+//                Text(text = "Company: ${job.salaryRange}", color = Color.Gray)
+//                Text(text = "Company: ${job.skills}", color = Color.Gray)
+//                Text(text = "Deadline: ${job.deadline}", color = Color.Gray)
             }
         }
     }
 }
 
 
-
-
-
-
 @Composable
-fun JobItem(job: Job, onClick: () -> Unit) {
-    Card(
+fun JobTypeChip(text: String) {
+    Box(
         modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .size(width = 240.dp, height = 100.dp)
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = job.title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "Company: ${job.company}", color = Color.Gray)
-                Text(text = "Deadline: ${job.deadline}", color = Color.Gray)
-            }
-        }
+        Text(text = text, color = Color.DarkGray, fontSize = 12.sp)
     }
 }
