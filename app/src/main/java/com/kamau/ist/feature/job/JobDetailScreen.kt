@@ -177,7 +177,8 @@ fun AboutJobItem(
             ) {
                 // Save Job Button
                 Button(
-                    onClick = { /* Handle save job action */ },
+                    onClick = { navController.navigate("save_list")
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Gray), // Set a different color for "Save Job" button if needed
                     modifier = Modifier.weight(1f) // Take up equal space in the row
                 ) {
