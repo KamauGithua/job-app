@@ -68,7 +68,7 @@ fun ApplicationFormScreen(navController: NavController, jobId: String?, viewMode
                 Button(
                     onClick = {
                         viewModel.applyForJob(userId, jobId ?: "", coverLetter)
-                        navController.navigate("job_list")
+                        navController.navigate("save_list")
                     }
                 ) {
                     Text("Submit Application")

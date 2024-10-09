@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kamau.ist.model.Job
+import com.kamau.ist.model.JobApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -25,6 +26,28 @@ class AdminViewModel @Inject constructor(
     // MutableState to track any error messages
     var errorMessage by mutableStateOf("")
         private set
+
+
+    var jobApplications by mutableStateOf<List<JobApplication>>(emptyList())
+        private set
+
+    // Function to fetch job applications
+    fun fetchJobApplications() {
+        isLoading = true
+        firestore.collection("applications")
+            .get()
+            .addOnSuccessListener { result ->
+                val applications = result.toObjects(JobApplication::class.java)
+                jobApplications = applications
+                isLoading = false
+            }
+            .addOnFailureListener { exception ->
+                isLoading = false
+                errorMessage = "Error fetching applications: ${exception.message}"
+            }
+    }
+
+
 
     // Function to handle job posting logic
     fun postNewJob(job: Job, onJobPosted: () -> Unit) {

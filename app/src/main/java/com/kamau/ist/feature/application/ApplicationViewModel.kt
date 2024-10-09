@@ -13,11 +13,12 @@ class ApplicationViewModel @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : ViewModel() {
 
-    fun applyForJob(userId: String, jobId: String, coverLetter: String) {
+    fun applyForJob(userId: String, jobId: String, coverLetter: String, skills: String) {
         val application = JobApplication(
             userId = userId,
             jobId = jobId,
-            coverLetter = coverLetter
+            coverLetter = coverLetter,
+            skills = skills
         )
 
         firestore.collection("applications").add(application)

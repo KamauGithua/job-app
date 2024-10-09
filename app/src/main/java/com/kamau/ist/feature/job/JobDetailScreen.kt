@@ -188,7 +188,7 @@ fun AboutJobItem(
                 // Save Job Button
                 Button(
                     onClick = {
-                        viewModel.saveJob()
+                        viewModel.saveJob(job)
                         navController.navigate("save_list")
 
                     },

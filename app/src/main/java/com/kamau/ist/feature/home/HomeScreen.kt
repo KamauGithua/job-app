@@ -262,22 +262,6 @@ fun NavBotSheet(navController: NavController) {
                         )
                     }
 //                    // Saved JobList details
-//                    IconButton(
-//                        onClick = {
-//                            selected.value = Icons.Default.Notifications
-//                            navController.navigate("save_list") {
-//                                popUpTo(0)
-//                            }
-//                        },
-//                        modifier = Modifier.weight(1f)
-//                    ) {
-//                        Icon(
-//                            Icons.Default.Notifications,
-//                            contentDescription = null,
-//                            modifier = Modifier.size(26.dp),
-//                            tint = if (selected.value == Icons.Default.Notifications) Color.White else Color.DarkGray
-//                        )
-//                    }
                     Box(
                         modifier = Modifier.weight(1f), // This Box will take up equal space in the Row or BottomAppBar
                         contentAlignment = Alignment.Center

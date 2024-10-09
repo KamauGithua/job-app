@@ -12,9 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.kamau.ist.feature.SaveListScreen
+import com.kamau.ist.feature.SaveJobListScreen
 import com.kamau.ist.feature.admin.AdminDashboardScreen
 import com.kamau.ist.feature.admin.PostJobScreen
 import com.kamau.ist.feature.application.ApplicationFormScreen
@@ -80,7 +79,7 @@ fun MainApp() {
                 PostJobScreen(navController)
             }
             composable("save_list") {
-                SaveListScreen(navController)
+                SaveJobListScreen(navController)
             }
 
             composable("job_list") { JobListScreen(navController) }
