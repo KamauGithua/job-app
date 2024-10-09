@@ -11,6 +11,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.kamau.ist.model.Job
@@ -27,6 +32,10 @@ import com.kamau.ist.model.Job
 @Composable
 fun JobDetailScreen(navController: NavController, jobId: String?, viewModel: JobViewModel = hiltViewModel()) {
     val job = viewModel.jobList.find { it.id == jobId }
+    // Access the saved job count from the ViewModel
+    val savedJobCount = viewModel.savedJobCount
+//    val savedJobCount by remember { mutableStateOf(viewModel.savedJobCount) }
+
 
     Scaffold(
         topBar = { JobDetailTopAppBar(navController) },
@@ -89,7 +98,8 @@ fun AboutJobsSection(job: Job, navController: NavController) {
 @Composable
 fun AboutJobItem(
     job: Job,
-    navController: NavController
+    navController: NavController,
+    viewModel: JobViewModel = hiltViewModel()
 ) {
     Card(
         modifier = Modifier
@@ -177,12 +187,15 @@ fun AboutJobItem(
             ) {
                 // Save Job Button
                 Button(
-                    onClick = { navController.navigate("save_list")
+                    onClick = {
+                        viewModel.saveJob()
+                        navController.navigate("save_list")
+
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Gray), // Set a different color for "Save Job" button if needed
                     modifier = Modifier.weight(1f) // Take up equal space in the row
                 ) {
-                    Text("Save Job")
+                    Text("Save Job (${viewModel.savedJobCount})")
                 }
 
                 Spacer(modifier = Modifier.width(16.dp)) // Spacer to add some space between buttons

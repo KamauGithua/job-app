@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExitToApp
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -82,6 +84,7 @@ fun NavBotSheet(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current.applicationContext
+    var savedJobCount by remember { mutableStateOf(0) }
 
     val selected = remember {
         mutableStateOf(Icons.Default.Home)
@@ -258,23 +261,64 @@ fun NavBotSheet(navController: NavController) {
                             tint = if (selected.value == Icons.Default.MailOutline) Color.White else Color.DarkGray
                         )
                     }
-                    // JobListing details
+//                    // Saved JobList details
+//                    IconButton(
+//                        onClick = {
+//                            selected.value = Icons.Default.Notifications
+//                            navController.navigate("save_list") {
+//                                popUpTo(0)
+//                            }
+//                        },
+//                        modifier = Modifier.weight(1f)
+//                    ) {
+//                        Icon(
+//                            Icons.Default.Notifications,
+//                            contentDescription = null,
+//                            modifier = Modifier.size(26.dp),
+//                            tint = if (selected.value == Icons.Default.Notifications) Color.White else Color.DarkGray
+//                        )
+//                    }
+                    Box(
+                        modifier = Modifier.weight(1f), // This Box will take up equal space in the Row or BottomAppBar
+                        contentAlignment = Alignment.Center
+                    ) {
                     IconButton(
                         onClick = {
-                            selected.value = Icons.Default.Notifications
-                            navController.navigate("job_detail/{jobId}") {
+                            selected.value = Icons.Default.Favorite
+                            navController.navigate("save_list") {
                                 popUpTo(0)
                             }
                         },
-                        modifier = Modifier.weight(1f)
+//                        modifier = Modifier
+//                            .weight(1f)
                     ) {
                         Icon(
-                            Icons.Default.Notifications,
-                            contentDescription = null,
+                            Icons.Default.Favorite, // Change the icon to indicate "Saved Jobs"
+                            contentDescription = "Saved Jobs",
                             modifier = Modifier.size(26.dp),
-                            tint = if (selected.value == Icons.Default.Notifications) Color.White else Color.DarkGray
+                            tint = if (selected.value == Icons.Default.Favorite) Color.White else Color.DarkGray
                         )
                     }
+
+                    // Show a notification badge if there are saved jobs
+                    if (savedJobCount > 0) { // Replace with your actual saved job count state variable
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd) // Position the badge at the top end of the button
+                                .padding(top = 4.dp, end = 4.dp)
+                                .size(18.dp) // Set the size of the badge
+                                .background(color = Color.Red, shape = CircleShape), // Red circular badge
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = savedJobCount.toString(), // Display the number of saved jobs
+                                color = Color.White,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                    }
+
                     // Profile
                     IconButton(
                         onClick = {

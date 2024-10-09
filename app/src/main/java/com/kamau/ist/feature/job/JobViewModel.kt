@@ -20,10 +20,14 @@ class JobViewModel @Inject constructor(
 //    private val firestore: FirebaseFirestore
 ) : ViewModel() {
 
+
     var jobList by mutableStateOf(listOf<Job>())
         private set
 
     var applicationStatus by mutableStateOf<Result<Void?>>(Result.success(null))
+        private set
+
+    var savedJobCount by mutableStateOf(0)  // Mutable state to track number of saved jobs
         private set
 
     init {
@@ -57,13 +61,8 @@ class JobViewModel @Inject constructor(
             applicationStatus = result
         }
     }
+    fun saveJob() {
+        savedJobCount++  // Increment the saved job count
+    }
 
-//    private fun loadJobs() {
-//        firestore.collection("jobs").get()
-//            .addOnSuccessListener { result ->
-//                jobList = result.documents.map { document ->
-//                    document.toObject(Job::class.java)!!.copy(id = document.id)
-//                }
-//            }
-//    }
 }
