@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun ApplicationFormScreen(navController: NavController, jobId: String?, viewModel: ApplicationViewModel = hiltViewModel()) {
     var coverLetter by remember { mutableStateOf("") }
+    var skills by remember { mutableStateOf("") }
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     Scaffold(
@@ -53,6 +54,16 @@ fun ApplicationFormScreen(navController: NavController, jobId: String?, viewMode
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = skills,
+                    onValueChange = { skills = it },
+                    label = { Text(text = "Skills")},
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
 
                 Button(
                     onClick = {

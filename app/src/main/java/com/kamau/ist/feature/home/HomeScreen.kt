@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -43,16 +44,32 @@ fun HomeScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .align(Alignment.Center),
-            verticalArrangement = Arrangement.Center,
+                .padding(16.dp), // Adds padding around the column
+            verticalArrangement = Arrangement.SpaceBetween, // Space between items for better alignment
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Welcome User")
+            // This text will be at the top of the column
+//            Text(
+//                text = "Welcome Alumni",
+//                fontSize = 27.sp, fontWeight = FontWeight.Bold,
+//                modifier = Modifier.align(Alignment.CenterHorizontally)
+//            )
 
+            // Spacer to push the button down
+            Spacer(modifier = Modifier.weight(1f))
 
+            // Button positioned at the center of the screen
+            Button(
+                onClick = { navController.navigate("job_list") },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(text = "Browse Jobs")
+            }
 
-
+            // Spacer to push the button up
+            Spacer(modifier = Modifier.weight(1f))
         }
+
     }
 }
 
@@ -181,7 +198,7 @@ fun NavBotSheet(navController: NavController) {
                 TopAppBar(
                     title = { Text(text = "IST ALUMNI APP") },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(0.6f),
+                        containerColor = Color.Red,
                         titleContentColor = Color.White,
                         navigationIconContentColor = Color.White
                     ),
@@ -199,7 +216,7 @@ fun NavBotSheet(navController: NavController) {
                 )
             },
             bottomBar = {
-                BottomAppBar(containerColor = Purple80) {
+                BottomAppBar(containerColor = Color.Red) {
                     IconButton(
                         onClick = {
                             selected.value = Icons.Default.Home
@@ -216,23 +233,7 @@ fun NavBotSheet(navController: NavController) {
                             tint = if (selected.value == Icons.Default.Home) Color.White else Color.DarkGray
                         )
                     }
-                    // Search
-//                    IconButton(
-//                        onClick = {
-//                            selected.value = Icons.Default.Search
-//                            navController.navigate(Screens.Search.screen) {
-//                                popUpTo(0)
-//                            }
-//                        },
-//                        modifier = Modifier.weight(1f)
-//                    ) {
-//                        Icon(
-//                            Icons.Default.Search,
-//                            contentDescription = null,
-//                            modifier = Modifier.size(26.dp),
-//                            tint = if (selected.value == Icons.Default.Search) Color.White else Color.DarkGray
-//                        )
-//                    }
+
 //                     Floating Button
                     FloatingActionButton(
                         onClick = { showBottomSheet = true },

@@ -195,7 +195,9 @@ fun JobItem(job: Job, onClick: () -> Unit,
 Spacer(modifier = Modifier.height(12.dp))
 
             Button(onClick = {
-                navController.navigate("jobDetail")
+                navController.navigate("job_detail/${job.id}")  // Correctly passes the value of job.id.
+
+//
                              // Passing first job type as example
                 //                navController.navigate("notifications") // Passing first job type as example
             },
@@ -204,24 +206,12 @@ Spacer(modifier = Modifier.height(12.dp))
                 ) {
                 Text("View Job")
             }
-//                Text(text = "Company: ${job.location}", color = Color.Gray)
-//                Text(text = "Company: ${job.jobTypes}", color = Color.Gray)
-//                Text(text = "Company: ${job.salaryRange}", color = Color.Gray)
-//                Text(text = "Company: ${job.skills}", color = Color.Gray)
-//                Text(text = "Deadline: ${job.deadline}", color = Color.Gray)
+
             }
         }
     }
 }
 
 
-@Composable
-fun JobTypeChip(text: String) {
-    Box(
-        modifier = Modifier
-            .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Text(text = text, color = Color.DarkGray, fontSize = 12.sp)
-    }
-}
+
+
