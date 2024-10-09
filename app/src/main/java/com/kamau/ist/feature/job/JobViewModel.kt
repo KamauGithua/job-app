@@ -61,8 +61,30 @@ class JobViewModel @Inject constructor(
             applicationStatus = result
         }
     }
-    fun saveJob() {
-        savedJobCount++  // Increment the saved job count
+
+    // Function to save a job in Firestore
+    fun saveJob(job: Job) {
+        viewModelScope.launch {
+            val result = repository.saveJob(job)
+            result.onSuccess {
+                savedJobCount++
+                // Notify user of success (if needed)
+            }.onFailure {
+                // Handle failure
+            }
+        }
     }
 
+    // Method to retrieve saved jobs
+    fun getSavedJobs(onJobsLoaded: (List<Job>) -> Unit) {
+        viewModelScope.launch {
+            val result = repository.getSavedJobs()
+            result.onSuccess { jobs ->
+                onJobsLoaded(jobs)
+            }.onFailure { exception ->
+                // Handle failure (e.g., show error message)
+                println("Error fetching saved jobs: ${exception.message}")
+            }
+        }
+    }
 }

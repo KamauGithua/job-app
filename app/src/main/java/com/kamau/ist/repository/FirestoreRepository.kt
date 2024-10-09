@@ -105,5 +105,28 @@ class FirestoreRepository @Inject constructor(
             Result.failure(e)
         }
     }
+    // Function to save a job in Firestore
+    suspend fun saveJob(job: Job): Result<Void?> {
+        return try {
+            val jobId = jobsCollection.document().id
+            job.id = jobId
+            jobsCollection.document(jobId).set(job).await()
+            Result.success(null)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // Function to fetch saved jobs from Firestore
+    suspend fun getSavedJobs(): Result<List<Job>> {
+        return try {
+            val result = jobsCollection.get().await()
+            val jobs = result.toObjects(Job::class.java)
+            Result.success(jobs)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
 
